@@ -143,3 +143,68 @@
 //	getchar();
 //	return 0;
 //}
+
+
+/*
+  boost 同步 socket
+	验证 OK
+*/
+#include "stdafx.h"
+#include "iostream"
+#include "boost/asio.hpp"
+
+using namespace std;
+using namespace boost::asio;
+
+int main() {
+	try {
+		typedef ip::tcp::acceptor acceptor_type;
+		typedef ip::tcp::endpoint endpoint_type;
+		typedef ip::tcp::socket socket_type;
+		typedef ip::address address_type;
+
+		//std::cout << "Client start." << endl;
+		//io_service io;
+		//socket_type sock(io);
+		//endpoint_type ep(address_type::from_string("127.0.0.1"), 6688);
+
+		//sock.connect(ep);
+
+		//vector<char> str(100, 0);
+		//boost::system::error_code ec;
+		//for (;;)//循环接收
+		//{
+		//	sock.read_some(buffer(str), ec);
+		//	if (ec) {
+		//		break;
+		//	}
+		//	cout << &str[0];
+		//}
+
+		for (int i = 0; i < 10; i=i+1) {
+			std::cout << "Client start. " << i << endl;
+			io_service io;
+			socket_type sock(io);
+			endpoint_type ep(address_type::from_string("127.0.0.1"), 6688);
+
+			sock.connect(ep);
+
+			vector<char> str(100, 0);
+			boost::system::error_code ec;
+			for (;;)//循环接收
+			{
+				sock.read_some(buffer(str), ec);
+				if (ec) {
+					break;
+				}
+				cout << &str[0];
+			}
+			std::cout << "" << endl;
+		}
+		// 析构自动断开连接
+	} catch (std::exception &e) {
+		std::cout << e.what() << endl;
+	}
+	getchar();
+	return 0;
+}

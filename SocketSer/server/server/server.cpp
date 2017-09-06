@@ -129,3 +129,40 @@
 //	return 0;
 //}
 
+
+/*
+  boost 同步socket
+	验证 OK
+*/
+#include "stdafx.h"
+#include "iostream"
+#include "boost/asio.hpp"
+
+using namespace std;
+using namespace boost::asio;
+
+int main() {
+	try {
+		typedef ip::tcp::acceptor acceptor_type;
+		typedef ip::tcp::endpoint endpoint_type;
+		typedef ip::tcp::socket socket_type;
+
+		std::cout << "Server start." << endl;
+		io_service io;
+		acceptor_type acceptor(io, endpoint_type(ip::tcp::v4(), 6688));
+		std::cout << acceptor.local_endpoint().address() << endl;
+
+		for (;;) {
+			socket_type sock(io);
+			acceptor.accept(sock);
+
+			std::cout << "Client";
+			std::cout << sock.remote_endpoint().address() << endl;
+			sock.send(buffer("Hello asio"));
+		}
+	} catch (std::exception &e) {
+		std::cout << e.what() << endl;
+	}
+
+	return 0;
+}
