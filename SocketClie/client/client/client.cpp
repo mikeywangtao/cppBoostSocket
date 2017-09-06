@@ -25,6 +25,10 @@
 
 /*
   client.cpp boost socket 客户端
+
+	通过tcp::socket类定义一个tcp client对象socket
+	通过connect函数连接服务器，打开socket连接。
+	通过read_some函数来读数据
 */
 #include "stdafx.h"
 #include "cstdio"
