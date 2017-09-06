@@ -24,6 +24,10 @@
 
 /*
   server.cpp Boost socket server 控制台入口
+
+	通过tcp::acceptor类创建一个tcp server对象，并绑定端口（也可以不在构造器中自动绑定，而通过bind函数手动绑定）
+	通过accept函数获取远端连接
+	通过远端连接的write_some函数将数据发往客户端
 */
 #include "stdafx.h"
 #include "ctime"
