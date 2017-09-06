@@ -9,6 +9,7 @@ using namespace std;
 
 int main()
 {
+
 	cout << "Server Hello world" << endl;
 	getchar();
 	return 0;
