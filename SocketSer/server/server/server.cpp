@@ -21,6 +21,10 @@
 //	return 0;
 //}
 
+
+/*
+  server.cpp Boost socket server 控制台入口
+*/
 #include "stdafx.h"
 #include "ctime"
 #include "iostream"
