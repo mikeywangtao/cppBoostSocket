@@ -152,6 +152,7 @@
 #include "stdafx.h"
 #include "iostream"
 #include "boost/asio.hpp"
+#include "windows.h"
 
 using namespace std;
 using namespace boost::asio;
@@ -181,14 +182,19 @@ int main() {
 		//	cout << &str[0];
 		//}
 
-		for (int i = 0; i < 10; i=i+1) {
-			std::cout << "Client start. " << i << endl;
+		//int i = 0;
+		//while (i < 20) {
+		//	i = i + 1;
+			std::cout << "Client start." << endl;
 			io_service io;
 			socket_type sock(io);
 			endpoint_type ep(address_type::from_string("127.0.0.1"), 6688);
 
 			sock.connect(ep);
 
+			Sleep(200);
+			std::cout << "Client Output." << endl;
+			std::cout << "\n" << endl;
 			vector<char> str(100, 0);
 			boost::system::error_code ec;
 			for (;;)//循环接收
@@ -200,7 +206,29 @@ int main() {
 				cout << &str[0];
 			}
 			std::cout << "" << endl;
-		}
+		//}
+
+
+		//for (int i = 0; i < 10; i=i+1) {
+		//	std::cout << "Client start. " << i << endl;
+		//	io_service io;
+		//	socket_type sock(io);
+		//	endpoint_type ep(address_type::from_string("127.0.0.1"), 6688);
+
+		//	sock.connect(ep);
+
+		//	vector<char> str(100, 0);
+		//	boost::system::error_code ec;
+		//	for (;;)//循环接收
+		//	{
+		//		sock.read_some(buffer(str), ec);
+		//		if (ec) {
+		//			break;
+		//		}
+		//		cout << &str[0];
+		//	}
+		//	std::cout << "" << endl;
+		//}
 		// 析构自动断开连接
 	} catch (std::exception &e) {
 		std::cout << e.what() << endl;

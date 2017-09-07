@@ -136,7 +136,9 @@
 */
 #include "stdafx.h"
 #include "iostream"
+#include "string"
 #include "boost/asio.hpp"
+#include "windows.h"
 
 using namespace std;
 using namespace boost::asio;
@@ -146,23 +148,75 @@ int main() {
 		typedef ip::tcp::acceptor acceptor_type;
 		typedef ip::tcp::endpoint endpoint_type;
 		typedef ip::tcp::socket socket_type;
+		
+		boost::system::error_code ec;
 
+		string sd = "Hello asio ";
 		std::cout << "Server start." << endl;
 		io_service io;
 		acceptor_type acceptor(io, endpoint_type(ip::tcp::v4(), 6688));
 		std::cout << acceptor.local_endpoint().address() << endl;
+		char buf[512];
+		
+		int i = 0;
 
 		for (;;) {
+			i = 0;
+			std::cout << "Server Ouput." << endl;
 			socket_type sock(io);
-			acceptor.accept(sock);
+			acceptor.accept(sock, ec);
+			if (ec) 
+			{
+				cerr << "acc.accept(): An error occurred: " << ec.message() << '\n';
+				continue;
+			}
 
 			std::cout << "Client";
 			std::cout << sock.remote_endpoint().address() << endl;
-			sock.send(buffer("Hello asio"));
+
+			socket_type *a = &sock;
+			std::cout << "Client XX : " << a << endl;
+
+			std::size_t len = boost::asio::read(sock,
+				boost::asio::buffer(buf, sizeof buf), 
+				boost::asio::transfer_at_least(1), ec);
+			if (ec) {
+				if (ec != boost::asio::error::eof)
+					cerr << "sock.read_some(): An error occurred: "
+					<< ec.message() << '\n';
+				break;
+			}
+
+			std::cout << "in : " << buf << endl;
+
+			int i = 0;
+			while (i < 8) 
+			{
+				i = i + 1;
+				Sleep(2000);
+				std::stringstream ss;
+				std::string str;
+
+				ss << i;
+				ss >> str;
+				str = sd + str + "\n";
+				std::cout << "Ser Send ----: " << str << endl;
+				sock.send(buffer(str));
+				//sock.send(buffer("Hello asio\n"));
+				//sock.send(buffer(str));
+			}
 		}
+			//std::cout << "Server Ouput." << endl;
+			//socket_type sock(io);
+			//acceptor.accept(sock);
+
+			//std::cout << "Client";
+			//std::cout << sock.remote_endpoint().address() << endl;
+			//sock.send(buffer("Hello asio"));
 	} catch (std::exception &e) {
 		std::cout << e.what() << endl;
+		std::cout << "Server Error" << endl;
 	}
-
+	getchar();
 	return 0;
 }
